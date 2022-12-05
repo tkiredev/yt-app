@@ -48,7 +48,7 @@ var app = _.Sl("#app"),vnf = (t)=>{
     if (_.chi(hbar) > 1) hbar.removeChild(hbar.firstChild);
     if (_.chi(app.childNodes[1]) > 0) app.childNodes[1].removeChild(app.childNodes[1].firstChild)
 
-    var s = await _._re(`s?q=${encodeURIComponent(BT)}&p=2`, true)
+    var s = await _._re(`s?q=${encodeURIComponent(BT)}`, true)
     pgecont("ytsearch", (s.items ?? false))
 
     e.stopPropagation()
@@ -293,7 +293,7 @@ _.ev(sbox.childNodes[0].firstChild.lastElementChild, "click",_b);
     } else if(t=="video"){
       _.Crw("div", {class: "compact-media-item-byline small-text"},false, subh).textContent = (v.author.name)
       let vw = _.Crw("div", {class: "compact-media-item-stats small-text"},_.Crw("font", {style: "vertical-align: inherit;"}), subh)
-      vw.firstElementChild["textContent"] = (v.views+" views ")
+      vw.firstElementChild["textContent"] = (_.pvw(v.short_view_count_text))
 
       let upl = _.Crw("div", {class: "compact-media-item-stats small-text"},_.Crw("font", {style: "vertical-align: inherit;"}), subh)
       upl.firstElementChild["textContent"] = (v.uploadedAt)
@@ -379,6 +379,7 @@ const home = ()=>{
   }
 },watch = async () => {
  if ( a.Rt("watch") != false ){
+   var avlb = true;
    _.Sl("#app")["classList"].add("watch-container-allow-sticky");
    hload("watch") || dfload() || rwat();
 
@@ -405,7 +406,7 @@ const home = ()=>{
    var s = false;
 
    if (a.Rt("q").trim().length > 0) {
-     s = await _._re(`s?q=${a.Rt("q")}&p=2`, true)
+     s = await _._re(`s?q=${a.Rt("q")}`, true)
    }
   
    pgecont("ytsearch", (s.items ?? false))
@@ -481,6 +482,16 @@ results()
 	As: (e,o)=>{
       Object.assign(e.style,o)
 	},
+  Er: function(msg){
+    document.title = "Error";
+    var z = this.Crw("div", {class: "cover center"}, this.Crw("div", {class: "playability-status-message"})),w = this.Sl("ytm-watch");
+
+    z.firstElementChild["textContent"] = msg ?? "Este video no está disponible.";
+    w.firstElementChild["appendChild"](z)
+    
+    throw("App stoped")
+    return false;
+  },
   chi: (p)=>{
     //count childs in parent
     if (typeof p != "object") throw("Error count childNodes")
@@ -502,6 +513,9 @@ results()
   function g(q){return "i/vi/"+(id.split("/")[4])+"/"+q+".jpg?"+(id.split("?")[1])}
   return (await this._re(g("hq720"),false)).code != 200 ? ( (this._re(g("hqdefault"),false)).code != 2000 ? "i/"+(id.slice(20)): g("hqdefault") ):g("hq720");
   },
+  pvw: function(k){
+      return k.includes("M") ? `${k.split(' ')[0]} de vistas`:`${k.split(' ')[0]} vistas`;
+  },
   H: (p)=>{
    window.history.pushState("",false, p)
   },
@@ -521,9 +535,11 @@ results()
      null
     ];
 
-   //console.log(i.response.contents.twoColumnWatchNextResults.results.results.contents)
-
     switch(x[1].length){
+      case 2:
+       x[1] = (x[1])[0].videoPrimaryInfoRenderer;
+       this.Er(`Por ahora los live no estan disponible. (CODE: ${2})`)
+      break;
       case 3:
        x[2] = (x[1])[1].videoSecondaryInfoRenderer.owner.videoOwnerRenderer.subscriberCountText.simpleText;
        x[1] = (x[1])[0].videoPrimaryInfoRenderer;
@@ -540,9 +556,7 @@ results()
       break;
     };
 
-    let pvw =  k => {
-      return k.includes("M" || "B") ? `${k.split(' ')[0]} de vistas`:`${k} vistas`;
-    }
+
 
     this.Ren(`
         <ytm-slim-video-metadata-section-renderer class="scwnr-content single-column-watch-next-modern-panels">
@@ -556,7 +570,7 @@ results()
                   <div>
                     <span class="secondary-text">
                       <span class="formatted-string-text" role="text">
-                        ${pvw(x[1].viewCount.videoViewCountRenderer.shortViewCount.simpleText)} · ${x[1].relativeDateText.simpleText}
+                        ${this.pvw(x[1].viewCount.videoViewCountRenderer.shortViewCount.simpleText)} · ${x[1].relativeDateText.simpleText}
                       </span>
                     </span>
                     <button class="slim-video-information-show-more" arial-label="Mostrar más">
@@ -630,7 +644,7 @@ results()
                           <ytm-badge-and-byline-renderer>
                           <span class="ytm-badge-and-byline-item-byline small-text" aria-hidden="true">${k.author.name}</span>
                           <span class="ytm-badge-and-byline-separator" aria-hidden="true">•</span>
-                          <span class="ytm-badge-and-byline-item-byline small-text" aria-hidden="true">${pvw(k.short_view_count_text)}</span>
+                          <span class="ytm-badge-and-byline-item-byline small-text" aria-hidden="true">${this.pvw(k.short_view_count_text)}</span>
                           <span class="ytm-badge-and-byline-separator" aria-hidden="true">•</span>
                           <span class="ytm-badge-and-byline-item-byline small-text" aria-hidden="true">${k.published}</span>
                         </ytm-badge-and-byline-renderer>
