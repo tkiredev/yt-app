@@ -119,7 +119,7 @@ _.ev(sbox.childNodes[0].firstChild.lastElementChild, "click",_b);
  if (BT != "") bv["textContent"] = BT
 
  h["append"](ytmlgo,R(),nsr)
- },wth = ()=>{
+ },wth = () => {
 
    var ytmlgo = _.Crw("ytm-home-logo", false,
     _.Crw("button", {"class": "mobile-topbar-header-endpoint"},
@@ -240,18 +240,30 @@ _.ev(sbox.childNodes[0].firstChild.lastElementChild, "click",_b);
  wlc.childNodes[0].firstChild.textContent = "YouTube - Developer kire dev"
  wlc.childNodes[0].lastElementChild.textContent = "This Youtube is still in development, it will be constantly updated, to offer a better experience."
  } ,ytwatch = function(){
+
   var m = _.Crw("ytm-watch")
    _.Crw("div", {class: "player-size player-placeholder"},false, m)
-   _.Crw("ytm-cinematic-container-renderer", false, _.Crw("div"),m)
+
+   let cinematic = _.sc(_.Crw("ytm-cinematic-container-renderer", false,_.As(_.Crw("div"),{
+    position:"absolute",
+    inset: "0px",
+    pointerEvents: "none",
+    transform: "scale(1.5, 2.5)"
+   }),m),0)
+   
+   _.Crw("canvas",{style: "position: absolute; width: 100%; height: 100%;",width: "110", height: "75"},0,cinematic)
+   //_.Crw("canvas",{style: "position: absolute; width: 100%; height: 100%; opacity: 1;",width: "110", height: "75"},0,cinematic)
+
    _.Crw("ytm-single-column-watch-next-results-renderer", {class: "watch-content full-bleed-wn-thumbs"}, false, m)
   ct["appendChild"](m)
+
   if (!d.full) {
     vnf()
     return false;
   }
-  //console.log(d)
+  console.log(d)
+  _.Re(m,d)
 
-  _.Re(d)
  }, ytsearch = function(){
   var m = _.Crw("ytm-search", false, _.Crw("ytm-section-list-renderer", {class: " no-bottom-separator"},_.Crw("lazy-list")),ct)
   let lazy = m.childNodes[0].firstChild
@@ -363,11 +375,12 @@ _.Crw("ytm-custom-control",false,false,ba.childNodes[2])
 }
 
 //mode theme
-(function(){
+(function(d){
  var mode = "white";
-}())
+ 
+}(d))
 
-const BASE_URL = "http://erikdev.alwaysdata.net";
+const BASE_URL = "http://youtube.googleapis.com";
 
 const home = ()=>{
   if (w.location.pathname === "/") {
@@ -437,7 +450,7 @@ results()
   (i)? s.removeAttribute("hidden"):s.setAttribute("hidden","");
  },_re: async function(i,j){
    try{
-   let fh = await fetch("http://erikdev.alwaysdata.net"+"/"+i)
+   let fh = await fetch("http://youtube.googleapis.com"+"/"+i)
     if (fh.status === 200){
     this.spiner(false)
      return  (j? await fh.json():{"code": 200})
@@ -448,6 +461,17 @@ results()
    }catch(e){
     throw new Error(e)
    }
+  },
+  U: function(u){
+    return "http://youtube.googleapis.com"+u;
+  },
+  Pt: (txt, def = null) => {
+   if (typeof txt !== 'object') return def;
+    if (Object.prototype.hasOwnProperty.call(txt, 'simpleText')) return txt.simpleText;
+    if (Array.isArray(txt.runs)) {
+     return txt.runs.map(a => a.text).join('');
+    }
+   return def;
   },
   SA: (e,a,v)=>{
     e.setAttribute(a,v)
@@ -475,12 +499,21 @@ results()
     if(e){
      e["innerHTML"]+=v
     } else this.Sl("ytm-single-column-watch-next-results-renderer")["innerHTML"]=v
+  },sc: (a,c,t) => {
+     if (typeof a != "object" || typeof c != "number") return false;
+
+      var hk = a.childNodes[c] ?? a.childNodes[0];
+       while(hk.firstChild) hk = hk.lastElementChild;
+
+      if (t !="") hk["textContent"] = t;
+       return hk;
   },
 	Sl: (e)=>{
       return document.querySelector(e);
 	},
 	As: (e,o)=>{
       Object.assign(e.style,o)
+      return e;
 	},
   Er: function(msg){
     document.title = "Error";
@@ -491,6 +524,19 @@ results()
     
     throw("App stoped")
     return false;
+  },
+  KJ: function(){
+   this.As(document.body,{top: "-570px"}) || this.SA(document.body,"modal-open-body","");
+
+    var d = this.Crw("div",{class:"dialog-container"},0,document.body)
+
+    let lg = this.Crw("dialog",{class:"dialog rounded-container modern-dialog", role:"dialog", "aria-modal":true},0,d)
+     this.Crw("div",{class:"dialog-header","aria-live":"polite",tabindex:0},this.Crw("h2",{class:"player-settings-header"}),lg)
+      this.sc(lg,0,"Configuración de reproducción")
+     this.Crw("div",{class:"dialog-body user-text"},0,lg)
+     this.Crw("div",{class:"dialog-buttons"},0,lg)
+
+    this.Crw("c3-overlay",{class:"modern-overlay"},this.Crw("button",{class:"hidden-button","aria-label":"close"}),d)
   },
   chi: (p)=>{
     //count childs in parent
@@ -504,7 +550,7 @@ results()
 		return(`url(${u})`);
 	},
 	Im: (i)=>{
-    return(`http://erikdev.alwaysdata.net${i}`)
+    return(`http://youtube.googleapis.com${i}`)
 	},
 	ev: (e,t,call)=>{
 	 e ==null|| e.addEventListener(t,call)
@@ -527,7 +573,7 @@ results()
      },cv = new Intl.NumberFormat(undefined,{minimumIntegerDigits:0x2});
      return !c["hours"] ? c["minutes"]+":"+cv.format(c["seconds"]):c["hours"]+":"+c["minutes"]+":"+cv.format(c["seconds"]);
   },
-  Re: function(i){
+  Re: function(m,i){
 
     let x  = [
      i.videoDetails,
@@ -557,102 +603,103 @@ results()
     };
 
 
+    m = m.childNodes[2],sTl = false;
 
-    this.Ren(`
-        <ytm-slim-video-metadata-section-renderer class="scwnr-content single-column-watch-next-modern-panels">
-          <ytm-slim-video-information-renderer>
-            <div class="slim-video-metadata-header slim-video-metadata-header-modern">
-              <div class="slim-video-information-content slim-video-information-empty-badge">
-                <div class="slim-video-information-title-and-badges">
-                  <h2 class="slim-video-information-title slim-video-metadata-title-modern">
-                    ${x[0].title}
-                  </h2>
-                  <div>
-                    <span class="secondary-text">
-                      <span class="formatted-string-text" role="text">
-                        ${this.pvw(x[1].viewCount.videoViewCountRenderer.shortViewCount.simpleText)} · ${x[1].relativeDateText.simpleText}
-                      </span>
-                    </span>
-                    <button class="slim-video-information-show-more" arial-label="Mostrar más">
-                      ...más
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ytm-slim-video-information-renderer>
-          <ytm-slim-owner-renderer class="ytm-slim-owner-renderer-modern">
-            <a class="slim-owner-icon-and-title">
-             <ytm-profile-icon class="slim-owner-profile-icon">
-               <img src="http://erikdev.alwaysdata.net/ytc/${x[0].author.thumbnails.pop().url.slice(21)}">
-             </ytm-profile-icon>
-             <div class="slim-owner-bylines slim-owner-bylines-modern">
-               <h3 class="slim-owner-channel-name">${x[0].ownerChannelName}</h3>
-               <div class="subhead">${x[2]["split"](" ")[0]}</div>
-             </div>
-           </a>
-           <div class="slim-owner-subscribe-button cbox">
-             <ytm-button-renderer>
-               <button class="yt-spec-button-shape-next yt-spec-button-shape-next--filled yt-spec-button-shape-next--mono yt-spec-button-shape-next--size-m ">
-                <div class="cbox yt-spec-button-shape-next--button-text-content">
-                  <span class="yt-core-attributed-string yt-core-attributed-string--white-space-no-wraps">Suscribirse</span>
-                </div>
-              </button>
-            </ytm-button-renderer>
-           </div>
-          </ytm-slim-owner-renderer>
-        </ytm-slim-video-metadata-section-renderer>`);
+    let r = this.Crw("div",{class: "related-chips-slot-wrapper"}, false, m)
+    this.Crw("ytm-slim-video-metadata-section-renderer",{class: "scwnr-content single-column-watch-next-modern-panels"},false,r)
+    let y = this.Crw("ytm-slim-video-information-renderer", false, false, r.firstChild), o = this.Crw("ytm-slim-owner-renderer",{class: "ytm-slim-owner-renderer-modern"}, false, r.firstChild)
+    
+    if (x[1].superTitleLink != undefined) {
+    sTl = true;
+      this.Crw("div", {class: "slim-video-metadata-information-standalone-badge"},
+        this.Crw("ytm-standalone-badge-supported-renderer", {class: "top-standalone-badge top-standalone-badge-modern"},
+          this.Crw("ytm-standalone-collection-badge-renderer",false,
+            this.Crw("ytm-badge", {class: "standalone-collection-badge rounded-container"}))), y);
 
-      let qw = this.Crw("ytm-item-section-renderer",{"class":"scwnr-content single-column-watch-next-modern-panels"},this.Crw("lazy-list",false)),
-      z = this.Crw("div",{"class":"ytm-autonav-bar cbox"}, this.Crw("h3", {class: "ytm-autonav-title"}));z.firstChild["textContent"]=("A continuación");
-      qw.lastElementChild["appendChild"](z);
+      let hk = this.sc(y,0);
+      x[1].superTitleLink.runs.map(e => e.text).filter(f => f != " ").forEach(i =>{
+       (this.Crw("a", {tabindex: 0,"force-new-state": true, href: `/hashtag/${i.slice(1)}`},false, hk ))["textContent"] = i;
+      })
+    }
 
-      this.Sl("ytm-single-column-watch-next-results-renderer")["appendChild"](qw);
+    let q = this.Crw("div", {class: "slim-video-metadata-header slim-video-metadata-header-modern"},
+      this.Crw("div", {class: "slim-video-information-content slim-video-information-empty-badge"},
+        this.Crw("div", {class: "slim-video-information-title-and-badges"})),y)
 
-      i.related_videos.forEach(async(k)=>{
-      this.Ren(`
-            <ytm-video-with-context-renderer class="item">
-              <ytm-media-item>
-                <a class="media-item-thumbnail-container" href="/watch?v=${k.id}" arial-hidden="true">
-                  <div class="video-thumbnail-container-large center rounded-thumbnail">
-                    <div class="cover video-thumbnail-img video-thumbnail-bg"></div>
-                    <img class="cover video-thumbnail-img" src="http://erikdev.alwaysdata.net/${await this.Po(k.thumbnails.pop().url)}">
-                    <div class="video-thumbnail-overlay-bottom-left-right-group">
-                      <div class="video-thumbnail-overlay-left-right-group">
-                        <ytm-thumbnail-overlay-time-status-renderer class="rounded-container">
-                          <span>${this.Ct(k.length_seconds)}</span>
-                        </ytm-thumbnail-overlay-time-status-renderer>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-                <div class="details">
-                  <div class="media-channel">
-                    <ytm-channel-thumbnail-with-link-renderer>
-                      <a href="">
-                        <ytm-profile-icon class="channel-thumbnail-icon">
-                          <img src="http://erikdev.alwaysdata.net/ytc${k.author.thumbnails.pop().url.slice(21)}">
-                        </ytm-profile-icon>
-                      </a>
-                    </ytm-channel-thumbnail-with-link-renderer>
-                  </div>
-                  <div class="media-item-info cbox">
-                    <div class="media-item-metadata">
-                      <a href="">
-                        <h3 class="media-item-headline">${k.title}</h3>
-                        <div class="">
-                          <ytm-badge-and-byline-renderer>
-                          <span class="ytm-badge-and-byline-item-byline small-text" aria-hidden="true">${k.author.name}</span>
-                          <span class="ytm-badge-and-byline-separator" aria-hidden="true">•</span>
-                          <span class="ytm-badge-and-byline-item-byline small-text" aria-hidden="true">${this.pvw(k.short_view_count_text)}</span>
-                          <span class="ytm-badge-and-byline-separator" aria-hidden="true">•</span>
-                          <span class="ytm-badge-and-byline-item-byline small-text" aria-hidden="true">${k.published}</span>
-                        </ytm-badge-and-byline-renderer>
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </ytm-media-item>
-            </ytm-video-with-context-renderer>`,qw.lastElementChild)})
+    if (sTl != false) q.classList.add("slim-video-metadata-header-with-standalone-badge") && q.firstChild.classList.remove("slim-video-information-empty-badge")
+
+    this.ev(q, "click", (d)=>{
+      if (!d.target.href) {
+       //this.KJ()
+      }
+    })
+    
+    q = this.sc(y,1)
+    
+    this.Crw("h2",{class: "slim-video-information-title slim-video-metadata-title-modern"},false,q)["textContent"] = x[0].title;
+    let d =this.Crw("div",false,false,q)
+     this.Crw("span",{class:"secondary-text"},this.Crw("span", {class:"formatted-string-text"}),d);
+     this.sc(d, 0, `${this.pvw(x[1].viewCount.videoViewCountRenderer.shortViewCount.simpleText)} · ${x[1].relativeDateText.simpleText}`)
+     this.Crw("button", {class:"slim-video-information-show-more", "aria-label": "Mostrar más"},false,d)["textContent"] = "...más"
+
+
+    let n = this.Crw("a",{class: "slim-owner-icon-and-title", "arial-label":"",href:"#undefined"},false,o);
+     this.Crw("ytm-profile-icon", {class: "slim-owner-profile-icon"},
+      this.Crw("img", {src: this.U(`/ytc/${x[0].author.thumbnails.pop().url.slice(21)}`)}),n);
+
+    let z = this.Crw("div",{class: "slim-owner-bylines slim-owner-bylines-modern"},0,n)
+     this.Crw("h3",{class:"slim-owner-channel-name", "aria-hidden": true},0,z)["textContent"] = x[0].ownerChannelName;
+     this.Crw("div",{class:"subhead", "aria-hidden": true},0,z)["textContent"] = x[2]["split"](" ")[0];
+
+
+    let s = this.Crw("div",{class: "slim-owner-subscribe-button cbox"},
+      this.Crw("ytm-button-renderer",0,
+        this.Crw("button",{class:"yt-spec-button-shape-next yt-spec-button-shape-next--filled yt-spec-button-shape-next--mono yt-spec-button-shape-next--size-m"},
+          this.Crw("div", {class:"cbox yt-spec-button-shape-next--button-text-content"},
+            this.Crw("span",{class:"yt-core-attributed-string yt-core-attributed-string--white-space-no-wraps"})))), o);
+    this.sc(s,0 ,"Suscribirse")
+
+
+    let p = this.Crw("ytm-item-section-renderer",{class:"scwnr-content single-column-watch-next-modern-panels","data-content-type":"related"},
+      this.Crw("lazy-list"), m)
+     this.Crw("div",{class:"ytm-autonav-bar cbox"},this.Crw("h3",{class:"ytm-autonav-title"}),p.firstChild)
+    this.sc(p,0,"A continuación")
+    
+
+    let k = p.firstChild;
+    
+    i.related_videos.forEach(async o =>{
+     let qz = this.Crw("ytm-video-with-context-renderer",{class:"item"},this.Crw("ytm-media-item"),k),
+      qk = this.Crw("a",{class: "media-item-thumbnail-container", href: "/watch?v="+o.id, "aria-hidden": true},
+        this.Crw("div",{class: "video-thumbnail-container-large center rounded-thumbnail"}),qz.firstChild),
+      qm = this.Crw("div",{class: "details"},0,qz.firstChild);
+      qk = qk.firstChild;
+
+      this.Crw("div",{class: "cover video-thumbnail-img video-thumbnail-bg"},0,qk)
+      this.Crw("img",{class: "cover video-thumbnail-img yt-core-image--fill-parent-height yt-core-image--fill-parent-width yt-core-image yt-core-image--content-mode-scale-aspect-fill yt-core-image--loaded", src: this.U(`/${await(this.Po(o.thumbnails.pop().url))}`)},0,qk)
+      let ak = this.Crw("div",{class: "video-thumbnail-overlay-bottom-left-right-group"},
+        this.Crw("div",{class:"video-thumbnail-overlay-left-right-group"},
+          this.Crw("ytm-thumbnail-overlay-time-status-renderer",{class:"rounded-container"},this.Crw("span"))),qk)
+      this.sc(ak, 0, this.Ct(o.length_seconds))
+
+      this.Crw("div",{class: "media-channel"},this.Crw("ytm-channel-thumbnail-with-link-renderer",0,
+        this.Crw("a", {href:"#undefined"},this.Crw("ytm-profile-icon",{class:"channel-thumbnail-icon"},this.Crw("img",{src:this.U(`/ytc${o.author.thumbnails.pop().url.slice(21)}`)})))),qm)
+      let za = this.Crw("div",{class: "media-item-info cbox","no-channel-avatar":false},0,qm)
+       this.Crw("div",{class:"media-item-metadata"},this.Crw("a",{href:"/watch?v="+o.id}),za);
+
+       this.Ren(`<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
+         <path d="M12,16.5c0.83,0,1.5,0.67,1.5,1.5s-0.67,1.5-1.5,1.5s-1.5-0.67-1.5-1.5S11.17,16.5,12,16.5z M10.5,12 c0,0.83,0.67,1.5,1.5,1.5s1.5-0.67,1.5-1.5s-0.67-1.5-1.5-1.5S10.5,11.17,10.5,12z M10.5,6c0,0.83,0.67,1.5,1.5,1.5 s1.5-0.67,1.5-1.5S12.83,4.5,12,4.5S10.5,5.17,10.5,6z"></path>
+        </svg>`,this.sc(this.Crw("ytm-menu-renderer",{class:"media-item-menu"},this.Crw("ytm-menu",0,this.Crw("button",{class:"icon-button","aria-label":"Menú de acciones","aria-haspopup":true},
+        this.Crw("c3-icon"))),za),0))
+       
+       za = this.sc(za, 0);
+       this.Crw("h3",{class:"media-item-headline"},0,za)["textContent"] = o.title;
+       let ab = this.Crw("div",{class:"","aria-hidden": true},this.Crw("ytm-badge-and-byline-renderer",{class:"", "data-is-all-badges":""}),za)
+       ab = ab.firstChild;
+        this.Crw("span",{class:"ytm-badge-and-byline-item-byline small-text"},0,ab)["textContent"] = o.author.name;
+        this.Crw("span",{class:"ytm-badge-and-byline-separator"},0,ab)["textContent"] = "•"
+        this.Crw("span",{class:"ytm-badge-and-byline-item-byline small-text"},0,ab)["textContent"] = this.pvw(o.short_view_count_text)
+        this.Crw("span",{class:"ytm-badge-and-byline-separator"},0,ab)["textContent"] = "•"
+        this.Crw("span",{class:"ytm-badge-and-byline-item-byline small-text"},0,ab)["textContent"] = o.published;
+    })
 }}));
