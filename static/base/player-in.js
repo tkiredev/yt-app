@@ -9,6 +9,23 @@
      },cv = new Intl.NumberFormat(undefined,{minimumIntegerDigits:0x2});
      return !c["hours"] ? c["minutes"]+":"+cv.format(c["seconds"]):c["hours"]+":"+c["minutes"]+":"+cv.format(c["seconds"]);
     }, _ = {
+      Cinematic: function(){
+        var canvas = document.querySelector("canvas")
+       
+
+        
+        var layout = canvas.getContext('2d')
+
+        console.log(layout)
+
+        var img = new Image();
+        img.src = "http://erikdev.alwaysdata.net/i/vi/DO8ETIHXrFY/sddefault.jpg"
+    
+        
+         console.log(layout.drawImage(img,110,75))
+       
+
+      },
       Ren: function(v,e){
        if(e){
         e["innerHTML"]+=v
@@ -120,11 +137,15 @@
         video.currentTime = x.ca
       },
       Rz: ()=>{
+      //1920 x 1080 / 1280 x 720 / 640 x 360  -> height: 232px
+      //640 x 480 / 480 x 360  -> hight: 309px
+      //360 x 360 -> hight: 412px
+      //640 x 272
       //default quality
       var wd = "428px";
       var he = "241px";
       var t = [video.videoWidth,video.videoHeight]
-
+      
         if ( (t[0] * t[1]) === 172800 || (t[0] * t[1]) === 163200) {
 
           _.Gt(video,{width: "412px",height: "309px",top: "0px", left: "0px"}); 
@@ -141,7 +162,7 @@
           _.Gt(video,{width: "412px",height: "412px",top: "0px",left: "0"});
           _.X(w,"scroll",xscroll)
         } else  _.Gt(video,{width: wd, height: he,top: "0px",left: "0px"}); //default W: 412px H:232px
-       
+       return !1;
       }
     },i=412,xscroll = (x)=>{
       //412px min=> 231.75px
@@ -163,10 +184,7 @@
       })
   });
 
-    //1920 x 1080 / 1280 x 720 / 640 x 360  -> hight: 232px
-    //640 x 480 / 480 x 360  -> hight: 309px
-    //360 x 360 -> hight: 412px
-    //640 x 272
+
 
 const ctl = function(){
   _.Qr("ytm-custom-control").innerHTML =
@@ -354,7 +372,7 @@ var pl = _.Qr(".player-controls-pb");
 
 
 const only = (x)=>{
- _.Gt(_.Qr(".ytp-cued-thumbnail-overlay").childNodes[1],{display: "none"}) || ctl() || _.plyspi(true);
+ _.Gt(_.Qr(".ytp-cued-thumbnail-overlay").childNodes[1],{display: "none"}) || ctl() || _.plyspi(true) && _.Cinematic();
 
  if (video.duration > 0 || video.aredyState > 2) {
      _pclk();

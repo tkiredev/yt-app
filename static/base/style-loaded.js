@@ -1,7 +1,7 @@
 (function(d,w,a,_){
  "use strict";
 var app = _.Sl("#app"),vnf = (t)=>{
-	var ytm = _.Sl("ytm-watch"), cr = a.Cr("div","cover center")
+	var ytm = _.Sl("ytm-watch"), cr = a.Cr("div","cover center"),token = "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"
 
 	_.Sl("title").textContent = "- YouTube"
   cr.appendChild(a.Cr("div", "playability-status-message"))

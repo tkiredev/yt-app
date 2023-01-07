@@ -265,7 +265,43 @@ overflow: hidden;
 z-index: 2;
 direction: ltr;
 }
-
+.dialog-container{
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+display: -webkit-box;
+display: -webkit-flex;
+display: flex;
+-webkit-box-align: center;
+-webkit-align-items: center;
+align-items: center;
+-webkit-box-pack: center;
+-webkit-justify-content: center;
+justify-content: center;
+z-index: 4;
+}
+html[darker-dark-theme] .dialog{
+background-color: #212121;
+}
+.dialog.rounded-container{
+border-radius: 12px;
+}
+.dialog.modern-dialog{
+box-shadow: 0 0 24px 12px rgba(0,0,0,0.25);
+}
+@media(min-width: 330px) and (min-height: 330px){
+ .dialog-container{
+  margin: 0 40px;
+  padding: 0;
+  padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+ }
+ .dialog{
+  min-width: 250px;
+  max-width: 356px;
+ }
+}
 .welcome{
 	width: 100%;
 
