@@ -1064,7 +1064,9 @@ overflow: hidden;
 white-space: nowrap;
 }
 
-
+ytm-cinematic-container-renderer.fade-out{
+    opacity: 0;
+}
 ytm-item-section-renderer{
 display: block;
 border-bottom: 1px solid rgba(255,255,255,0.2);

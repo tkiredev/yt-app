@@ -186,8 +186,6 @@ _.ev(sbox.childNodes[0].firstChild.lastElementChild, "click",_b);
 
 
   _.ev(b, "click", function(){
-   //  hbar.removeChild(hbar.firstChild)
-
      _rc()
   })
  },know = function(){
@@ -240,16 +238,15 @@ _.ev(sbox.childNodes[0].firstChild.lastElementChild, "click",_b);
  wlc.childNodes[0].firstChild.textContent = "YouTube - Developer kire dev"
  wlc.childNodes[0].lastElementChild.textContent = "This Youtube is still in development, it will be constantly updated, to offer a better experience."
  } ,ytwatch = function(){
-
-  var m = _.Crw("ytm-watch")
-   _.Crw("div", {class: "player-size player-placeholder"},false, m)
+  var m = _.Crw("ytm-watch");
+  _.Crw("div", {class: "player-size player-placeholder"},false, m)
 
    let cinematic = _.sc(_.Crw("ytm-cinematic-container-renderer", false,_.As(_.Crw("div"),{
     position:"absolute",
     inset: "0px",
     pointerEvents: "none",
     transform: "scale(1.5, 2.5)"
-   }),m),0)
+   }),m),0);
    
    _.Crw("canvas",{style: "position: absolute; width: 100%; height: 100%;",width: "110", height: "75"},0,cinematic)
    //_.Crw("canvas",{style: "position: absolute; width: 100%; height: 100%; opacity: 1;",width: "110", height: "75"},0,cinematic)
@@ -260,8 +257,7 @@ _.ev(sbox.childNodes[0].firstChild.lastElementChild, "click",_b);
   if (!d.full) {
     vnf()
     return false;
-  }
-  console.log(d)
+  } 
   _.Re(m,d)
 
  }, ytsearch = function(){
@@ -377,7 +373,6 @@ _.Crw("ytm-custom-control",false,false,ba.childNodes[2])
 //mode theme
 (function(d){
  var mode = "white";
- 
 }(d))
 
 const BASE_URL = "http://youtube.googleapis.com";

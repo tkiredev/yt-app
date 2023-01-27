@@ -1,6 +1,6 @@
    (function(w,d,video){
-  "use strict";
-//4gQMsfSheLg
+   "use strict";
+
   var player = document.getElementById('player') ?? false,calcTime = (n) =>{
      let c = {
       hours: Math.floor(n / 3600) ?? false,
@@ -10,26 +10,35 @@
      return !c["hours"] ? c["minutes"]+":"+cv.format(c["seconds"]):c["hours"]+":"+c["minutes"]+":"+cv.format(c["seconds"]);
     }, _ = {
       Cinematic: function(){
+        var cinematic = this.Qr("ytm-cinematic-container-renderer");
         var canvas = document.querySelector("canvas")
-       
+        var sc  = document.querySelector(".ytp-cued-thumbnail-overlay-image");
+        var layout = canvas.getContext("2d");
+        var image = new Image();
 
-        
-        var layout = canvas.getContext('2d')
+        image.src = sc.style["background-image"].slice(5, -2);
 
-        console.log(layout)
-
-        var img = new Image();
-        img.src = "http://erikdev.alwaysdata.net/i/vi/DO8ETIHXrFY/sddefault.jpg"
-    
-        
-         console.log(layout.drawImage(img,110,75))
-       
-
+        image.onload = function(){
+         layout.fillStyle = "rgb(15, 15, 15)";
+         layout.fillRect(0,0,200,200);
+         layout.filter = 'blur(6px)';
+         layout.globalAlpha = 0.3;
+         layout.drawImage(image,15,12,80,50);
+        }
+        this.X(w, "scroll",()=>{
+        let scrollY =self.pageYOffset || (document.body.scrollTop+document.documentElement.scrollTop);
+   
+         if (scrollY > 195){
+          cinematic.classList.add("fade-out");
+         } else if (scrollY < 200){
+          cinematic.classList.remove("fade-out");
+         }
+       });
       },
       Ren: function(v,e){
        if(e){
         e["innerHTML"]+=v
-       } //else this.Sl("ytm-single-column-watch-next-results-renderer")["innerHTML"]=v
+       }
       },
       Bf: (n,q) => {
         return Math.max(n,q)
@@ -164,11 +173,6 @@
         } else  _.Gt(video,{width: wd, height: he,top: "0px",left: "0px"}); //default W: 412px H:232px
        return !1;
       }
-    },i=412,xscroll = (x)=>{
-      //412px min=> 231.75px
-      //top -21.4583px
-      let scrollY =self.pageYOffset || (document.body.scrollTop+document.documentElement.scrollTop);
-       //console.log(self.pageYOffset)
     }
 
   player.addEventListener("mouseover",()=>{
